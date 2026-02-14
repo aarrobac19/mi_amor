@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Love Gazette - Amor Sin Distancia by Alexdev</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* ===== HORÓSCOPO ===== */
+        .horoscopo-box {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(255,255,255,0.4);
+            border: 1px solid rgba(139,0,0,0.15);
+            border-top: 3px double var(--love-red);
+        }
+        .horoscopo-titulo {
+            font-family: 'Playfair Display', serif;
+            font-size: 13px;
+            color: var(--love-red);
+            text-align: center;
+            letter-spacing: 2px;
+            margin: 0 0 6px 0;
+        }
+        .horoscopo-signo {
+            font-family: 'Old Standard TT', serif;
+            font-size: 11px;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 1px;
+            color: #5a0000;
+            margin: 0 0 10px 0;
+            border-bottom: 1px dotted rgba(139,0,0,0.2);
+            padding-bottom: 8px;
+        }
+        .horoscopo-texto {
+            font-family: 'Old Standard TT', serif;
+            font-size: 12px;
+            line-height: 1.7;
+            color: var(--ink-color);
+            text-align: justify;
+            margin: 0 0 8px 0;
+        }
+        .horoscopo-prediccion {
+            margin-top: 10px;
+            padding: 8px 10px;
+            background: rgba(139,0,0,0.06);
+            border-left: 2px solid var(--love-red);
+            font-size: 11px;
+        }
+        .pred-label {
+            font-weight: bold;
+            font-family: 'Old Standard TT', serif;
+            color: var(--love-red);
+            display: block;
+            margin-bottom: 3px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 10px;
+        }
+        .pred-valor {
+            font-family: 'Dancing Script', cursive;
+            font-size: 14px;
+            color: #5a0000;
+            font-style: italic;
+        }
+
+        /* ===== MINI TEST ===== */
+        .test-box {
+            margin-top: 20px;
+            padding: 14px;
+            background: rgba(255,255,255,0.4);
+            border: 2px solid rgba(139,0,0,0.2);
+            border-top: 3px double var(--love-red);
+        }
+        .test-titulo {
+            font-family: 'Playfair Display', serif;
+            font-size: 13px;
+            color: var(--love-red);
+            text-align: center;
+            letter-spacing: 2px;
+            margin: 0 0 2px 0;
+        }
+        .test-subtitulo {
+            font-family: 'Dancing Script', cursive;
+            font-size: 13px;
+            color: #9a6060;
+            text-align: center;
+            margin: 0 0 12px 0;
+            border-bottom: 1px dotted rgba(139,0,0,0.2);
+            padding-bottom: 8px;
+        }
+        .test-pregunta {
+            font-family: 'Old Standard TT', serif;
+            font-size: 12px;
+            font-weight: bold;
+            color: #3a0000;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        .test-opcion {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: rgba(255,255,255,0.6);
+            border: 1px solid rgba(139,0,0,0.2);
+            padding: 6px 10px;
+            margin-bottom: 5px;
+            font-family: 'Old Standard TT', serif;
+            font-size: 11px;
+            cursor: pointer;
+            color: var(--ink-color);
+            transition: all 0.2s;
+        }
+        .test-opcion:hover {
+            background: rgba(139,0,0,0.08);
+            border-color: var(--love-red);
+        }
+        .test-opcion.correcta {
+            background: rgba(100,200,100,0.2);
+            border-color: #4a8a4a;
+            color: #2a5a2a;
+        }
+        .test-opcion.incorrecta {
+            background: rgba(200,80,80,0.15);
+            border-color: #8b0000;
+            color: #6a0000;
+        }
+        .test-resultado {
+            font-family: 'Dancing Script', cursive;
+            font-size: 16px;
+            color: var(--love-red);
+            text-align: center;
+            padding: 10px 0 4px;
+            line-height: 1.5;
+        }
+        .test-progreso {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-family: 'Old Standard TT', serif;
+            font-size: 10px;
+            color: #9a7070;
+            border-top: 1px dotted rgba(139,0,0,0.15);
+            padding-top: 6px;
+        }
+        .razones-box {
+            margin-top: 20px;
+            padding: 18px 16px;
+            background: rgba(255,255,255,0.45);
+            border: 1px solid rgba(139,0,0,0.15);
+            border-left: 3px solid var(--love-red);
+            position: relative;
+        }
+        .razones-titulo {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            color: var(--love-red);
+            text-align: center;
+            margin: 0 0 14px 0;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(139,0,0,0.2);
+            padding-bottom: 8px;
+        }
+        .razon-item {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dotted rgba(139,0,0,0.12);
+        }
+        .razon-item:last-of-type {
+            border-bottom: none;
+            margin-bottom: 6px;
+        }
+        .razon-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 13px;
+            color: var(--love-red);
+            font-weight: bold;
+            min-width: 22px;
+            padding-top: 1px;
+        }
+        .razon-texto {
+            font-family: 'Old Standard TT', serif;
+            font-size: 13px;
+            color: var(--ink-color);
+            line-height: 1.6;
+            font-style: italic;
+        }
+        .razones-footer {
+            font-family: 'Dancing Script', cursive;
+            font-size: 14px;
+            color: var(--love-red);
+            text-align: right;
+            margin: 8px 0 0 0;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+ 
+<body>
+
+<div id="pantalla-carta" class="overlay-carta">
+    <div class="carta-container" onclick="abrirPeriodico()">
+        <img src="carta.png" alt="Sobre" class="carta-img">
+    </div>
+</div>
+
+<div class="periodico-wrapper animate-entrance" id="periodico-contenido" style="display: none;">
+    <div class="periodico">
+        <header class="header-main">
+            <div class="info-top">
+                <span>EDICIÓN ESPECIAL · SOLO PARA LOS OJOS DE MI AMOR</span>
+                <span>DESDE EL 08/05/2025 · ECUADOR ↔ CHILE</span>
+            </div>
+            <section class="name">
+                <h1>Mi Niña Consentida</h1>
+            </section>
+            <section class="info-bar">
+                <p>VOL.∞ - NO. 1</p>
+                <p>ENTRE ECUADOR Y CHILE · 2026</p>
+                <p>PRECIO: UN BESO</p>
+            </section>
+        </header>
+
+        <section class="headline">
+            <h1>¡MILLONES DE KILÓMETROS NO PUEDEN CON ESTE AMOR!</h1>
+            <p class="subheadline">Científicos confirman que la distancia entre Ecuador y Chile es insuficiente para separar dos corazones que laten juntos.</p>
+        </section>
+
+        <hr class="double-hr">
+
+        <main class="content-grid">
+            <div class="col-left">
+                <article>
+                    <h2>CONFIRMADO: El amor a distancia sí existe y es nuestro</h2>
+                    <p><strong>Por: Tu Admirador #1.</strong> Desde aquel 8 de mayo de 2025, los niveles de felicidad han superado todos los récords históricos, incluso a través de pantallas y husos horarios.</p>
+                    <p>"Si el destino nos unió, mi única misión es hacer que valga la pena cada segundo.", declaró emocionado un portavoz de mi corazón desde Ecuador.</p>
+                </article>
+
+                <div class="video-section">
+                    <h3>REPORTAJE ESPECIAL</h3>
+                    <div class="video-container">
+                        <video id="miVideo" width="100%" autoplay loop muted playsinline>
+                            <source src="video.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="music-animation">
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </div>
+                </div>
+
+                <div class="razones-box">
+                    <h3 class="razones-titulo">❝ Por qué te amo ❞</h3>
+                    <div class="razon-item">
+                        <span class="razon-num">I.</span>
+                        <span class="razon-texto">Tu sonrisa me cambia el día, aunque la vea solo a través de una pantalla.</span>
+                    </div>
+                    <div class="razon-item">
+                        <span class="razon-num">II.</span>
+                        <span class="razon-texto">Un mensaje tuyo me saca una sonrisa sin importar cómo esté.</span>
+                    </div>
+                    <div class="razon-item">
+                        <span class="razon-num">III.</span>
+                        <span class="razon-texto">Me haces sentir en casa aunque estés a 3.247 km de distancia.</span>
+                    </div>
+                    <div class="razon-item">
+                        <span class="razon-num">IV.</span>
+                        <span class="razon-texto">Contigo el tiempo pasa diferente, siempre quiero más.</span>
+                    </div>
+                    <div class="razon-item">
+                        <span class="razon-num">V.</span>
+                        <span class="razon-texto">Eres la razón por la que creo que el amor a distancia vale cada segundo.</span>
+                    </div>
+                    <p class="razones-footer">— y la lista sigue, infinita como mi amor por ti 💕</p>
+                </div>
+            </div>
+
+            <div class="col-center">
+                <figure class="main-photo">
+                    <img src="45.png" alt="Nosotros">
+                    <figcaption>Cuando el mundo desapareció y solo quedamos tú y yo.</figcaption>
+                </figure>
+                <div class="quote-box">
+                    "La distancia es solo un número. Lo que siento por ti no tiene medida."
+                </div>
+
+                <div class="sopa-seccion" onclick="jugarSopa()">
+                    <p class="sopa-titulo"> SOPA DE AMOR</p>
+                    <div id="mini-sopa" class="sopa-grid-mini"></div>
+                    <p class="sopa-instruccion">(Clic para ampliar y jugar)</p>
+                </div>
+
+                <div class="horoscopo-box">
+                    <h3 class="horoscopo-titulo">★ HORÓSCOPO DEL AMOR ★</h3>
+                    <p class="horoscopo-signo">♾ SIGNO: ALMAS A DISTANCIA</p>
+                    <p class="horoscopo-texto">
+                        Los astros revelan que esta semana el universo conspira a tu favor. 
+                        Venus y Marte se alinean sobre el Pacífico Sur creando un puente 
+                        invisible entre Ecuador y Chile. <strong>Las energías indican que 
+                        los kilómetros que los separan son solo físicos</strong>, pues sus 
+                        corazones ya encontraron el camino de regreso el uno al otro.
+                    </p>
+                    <p class="horoscopo-texto">
+                        Esta semana trae consigo <em>mensajes inesperados que alegrarán 
+                        tu día</em>, momentos de conexión profunda y la certeza de que 
+                        lo que construyen juntos vale cada segundo de espera.
+                    </p>
+                    <div class="horoscopo-prediccion">
+                        <span class="pred-label">Predicción del mes:</span>
+                        <span class="pred-valor">"La distancio no nos separa. El amor siempre gana." 💫</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-right">
+                <div class="las-estrellas">
+                    <h3>LAS ESTRELLAS DICEN</h3>
+                    <p><strong>ALINEACIÓN ESPECIAL:</strong> Los astros de Ecuador y Chile se alinearon el 8 de mayo de 2025 para unir dos almas destinadas a encontrarse. El universo confirma: esta historia no termina con la distancia, termina con un "para siempre".</p>
+                </div>
+
+                <div class="ad-box" onclick="mostrarAlerta()">
+                    <p class="ad-title">ANUNCIO CLASIFICADO</p>
+                    <p><strong>SE BUSCA:</strong> La dueña de mi corazón, ubicada en Curicó, Chile. Seña particular: hace que 3.247 km se sientan como nada.
+                    <br><small>(Haz clic para responder)</small></p>
+                </div>
+
+                <div class="clima">
+                    <h3>PRONÓSTICO</h3>
+                    <p>🌧️ En Ecuador: lluvia de mensajes de amor.</p>
+                    <p>❄️ En Chile: copos de ternura toda la semana.</p>
+                    <p>💕 Entre los dos: 100% de probabilidades de sentirse cerca.</p>
+                </div>
+
+                <div class="test-box">
+                    <h3 class="test-titulo">¿CUÁNTO ME CONOCES?</h3>
+                    <p class="test-subtitulo">— Mini test exclusivo —</p>
+                    <div id="test-container">
+                        <div class="test-pregunta" id="pregunta-display"></div>
+                        <div class="test-opciones" id="opciones-display"></div>
+                        <div class="test-resultado" id="resultado-display" style="display:none;"></div>
+                    </div>
+                    <div class="test-progreso">
+                        <span id="test-num">Pregunta 1 de 4</span>
+                        <span id="test-puntos" style="display:none;"></span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <hr class="separator">
+
+        <footer class="interactive-footer">
+            <h3>¿QUÉ TANTO ME AMAS HOY?</h3>
+            <div class="btn-group">
+                <button onclick="respuestaAmor('mucho')">Mucho</button>
+                <button onclick="respuestaAmor('infinito')">¡Infinito!</button>
+                <button onclick="respuestaAmor('mas')">Más que ayer</button>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script>
+    function abrirPeriodico() {
+        document.getElementById('pantalla-carta').style.display = 'none';
+        document.getElementById('periodico-contenido').style.display = 'block';
+        const v = document.getElementById('miVideo');
+        v.muted = false; 
+        v.play();
+    }
+
+    const palabrasOcultas = ["AMOR", "POR", "SIEMPRE", "SERE", "TUYO"];
+
+    // Grilla 8x8 fija con palabras correctamente ubicadas:
+    // AMOR    → horizontal fila 0, cols 0-3
+    // SERE    → vertical   col 0,  filas 2-5
+    // POR     → horizontal fila 2, cols 5-7
+    // TUYO    → horizontal fila 3, cols 2-5
+    // SIEMPRE → horizontal fila 6, cols 0-6
+    const grilla = [
+        ['A','M','O','R','K','V','Z','N'],
+        ['L','X','C','B','Q','J','H','W'],
+        ['S','F','G','D','I','P','O','R'],
+        ['E','N','T','U','Y','O','B','C'],
+        ['R','P','K','Z','W','X','Q','L'],
+        ['E','J','H','V','F','N','D','G'],
+        ['S','I','E','M','P','R','E','T'],
+        ['U','K','B','C','L','J','W','X'],
+    ];
+
+    // Colores pastel para cada palabra encontrada
+    const coloresPastel = [
+        '#ffb3c6', // rosa — AMOR
+        '#b5ead7', // menta — POR
+        '#ffdac1', // durazno — SIEMPRE
+        '#c7ceea', // lavanda — SERE
+        '#fffacd', // amarillo — TUYO
+    ];
+
+    // Posiciones exactas de cada palabra en la grilla [fila, col]
+    const posicionesPalabras = {
+        'AMOR':    [[0,0],[0,1],[0,2],[0,3]],
+        'POR':     [[2,5],[2,6],[2,7]],
+        'SERE':    [[2,0],[3,0],[4,0],[5,0]],
+        'TUYO':    [[3,2],[3,3],[3,4],[3,5]],
+        'SIEMPRE': [[6,0],[6,1],[6,2],[6,3],[6,4],[6,5],[6,6]],
+    };
+
+    function generarContenidoSopa() {
+        let html = '';
+        for (let f = 0; f < 8; f++) {
+            for (let c = 0; c < 8; c++) {
+                html += `<span data-f="${f}" data-c="${c}">${grilla[f][c]}</span>`;
+            }
+        }
+        return html;
+    }
+
+    document.getElementById('mini-sopa').innerHTML = generarContenidoSopa();
+
+    // Estado del juego interactivo
+    let seleccionando = false;
+    let celdasSeleccionadas = [];
+    let palabrasEncontradas = [];
+    let sopaContainer = null;
+
+    function iniciarJuegoSopa() {
+        palabrasEncontradas = [];
+        celdasSeleccionadas = [];
+        seleccionando = false;
+    }
+
+    function getCeldas(container) {
+        return container.querySelectorAll('span[data-f]');
+    }
+
+    function resaltarSeleccion(container) {
+        getCeldas(container).forEach(span => {
+            const f = parseInt(span.dataset.f);
+            const c = parseInt(span.dataset.c);
+            const yaEncontrada = palabrasEncontradas.find(p =>
+                posicionesPalabras[p].some(pos => pos[0] === f && pos[1] === c)
+            );
+            if (yaEncontrada) {
+                const idx = palabrasOcultas.indexOf(yaEncontrada);
+                span.style.background = coloresPastel[idx];
+                span.style.borderColor = coloresPastel[idx];
+            } else if (celdasSeleccionadas.some(s => s[0] === f && s[1] === c)) {
+                span.style.background = '#ffe0f0';
+                span.style.borderColor = '#ffaacc';
+            } else {
+                span.style.background = '#fff';
+                span.style.borderColor = '#ccc';
+            }
+        });
+    }
+
+    function verificarPalabra(container) {
+        const texto = celdasSeleccionadas.map(([f, c]) => grilla[f][c]).join('');
+        const textoRev = texto.split('').reverse().join('');
+        const encontrada = palabrasOcultas.find(p =>
+            (p === texto || p === textoRev) && !palabrasEncontradas.includes(p)
+        );
+        if (encontrada) {
+            palabrasEncontradas.push(encontrada);
+            // Animación de éxito en las celdas
+            const idx = palabrasOcultas.indexOf(encontrada);
+            getCeldas(container).forEach(span => {
+                const f = parseInt(span.dataset.f);
+                const c = parseInt(span.dataset.c);
+                if (posicionesPalabras[encontrada].some(pos => pos[0] === f && pos[1] === c)) {
+                    span.style.background = coloresPastel[idx];
+                    span.style.borderColor = coloresPastel[idx];
+                    span.style.transform = 'scale(1.15)';
+                    span.style.transition = 'all 0.3s ease';
+                    setTimeout(() => { span.style.transform = 'scale(1)'; }, 350);
+                }
+            });
+            // Tachar la palabra en la lista
+            actualizarListaPalabras(encontrada);
+            // Si encontró todas → celebración
+            if (palabrasEncontradas.length === palabrasOcultas.length) {
+                setTimeout(() => mostrarCelebracion(), 600);
+            }
+        }
+        celdasSeleccionadas = [];
+        resaltarSeleccion(container);
+    }
+
+    function actualizarListaPalabras(encontrada) {
+        const lista = document.querySelectorAll('.sopa-palabra-item');
+        lista.forEach(li => {
+            if (li.dataset.palabra === encontrada) {
+                li.style.textDecoration = 'line-through';
+                li.style.color = '#a0a0a0';
+                li.style.opacity = '0.6';
+                li.innerHTML = '✓ ' + li.innerHTML;
+            }
+        });
+    }
+
+    function mostrarCelebracion() {
+        Swal.fire({
+            html: `
+                <div style="text-align:center; font-family:'Dancing Script',cursive; padding:10px 0;">
+                    <div style="font-size:52px; margin-bottom:10px; animation: latido 0.8s infinite;">💖</div>
+                    <h2 style="font-family:'Playfair Display',serif; color:#8b0000; font-size:28px; margin:0 0 8px;">
+                        ¡Lo lograste, mi amor!
+                    </h2>
+                    <div style="width:60px;height:2px;background:#8b0000;margin:10px auto;"></div>
+                    <p style="font-size:22px; color:#5a0000; margin:12px 0; font-style:italic; text-align:center;">
+                        "Te Ganaste Mi Corazón"
+                    </p>
+                    <div style="width:60px;height:2px;background:#8b0000;margin:10px auto;"></div>
+                    <p style="font-size:15px; color:#7a4a4a; margin:14px 0 4px; font-family:'Old Standard TT',serif; line-height:1.6; text-align:left;">
+                        Cada palabra que encontraste da la frase<br>
+                        que siempre te voy a decir.<br>
+                        <strong>AMOR · POR · SIEMPRE · SERÉ · TUYO</strong>
+                    </p>
+                    <p style="font-size:13px; color:#b08080; margin-top:12px; font-style:italic; text-align:right;">
+                        — y eso no cambia con la distancia 🌎💕
+                    </p>
+                    <div style="margin-top:14px; font-size:26px; letter-spacing:6px;">🌹✨🌹</div>
+                </div>
+                <style>
+                    @keyframes latido {
+                        0%,100%{transform:scale(1)} 50%{transform:scale(1.2)}
+                    }
+                </style>
+            `,
+            showConfirmButton: true,
+            confirmButtonText: '💖 Siempre tuyo',
+            confirmButtonColor: '#8b0000',
+            background: '#fdf6e3 url(https://www.transparenttextures.com/patterns/parchment.png)',
+            backdrop: `rgba(139,0,0,0.25) url("https://www.transparenttextures.com/patterns/hearts.png")`,
+            showClass: { popup: 'animate__animated animate__fadeInDown' },
+            width: '420px',
+        });
+    }
+
+    function jugarSopa() {
+        iniciarJuegoSopa();
+        const gridHTML = generarContenidoSopa();
+        const listaPalabras = palabrasOcultas.map((p, i) =>
+            `<span class="sopa-palabra-item" data-palabra="${p}" style="
+                display:inline-block; margin:4px 6px; padding:3px 10px;
+                background:${coloresPastel[i]}; border-radius:20px;
+                font-family:'Courier New',monospace; font-weight:bold;
+                font-size:14px; color:#333; border:1px solid rgba(0,0,0,0.1);
+            ">${p}</span>`
+        ).join('');
+
+        Swal.fire({
+            title: '💌 Sopa de Amor',
+            html: `
+                <p style="margin:8px 0 12px; font-size:15px; color:#7a4a4a; font-style:italic;">
+                    Haz clic en la primera y última letra de cada palabra
+                </p>
+                <div style="margin-bottom:12px;">${listaPalabras}</div>
+                <div class="sopa-grid-popup" id="sopa-interactiva">${gridHTML}</div>
+                <p id="sopa-hint" style="font-size:12px; margin-top:10px; color:#b08080; font-style:italic; min-height:18px;"></p>
+            `,
+            confirmButtonText: '¡Lo logré!',
+            confirmButtonColor: '#8b0000',
+            background: '#fdf6e3 url(https://www.transparenttextures.com/patterns/parchment.png)',
+            customClass: { popup: 'swal-sopa-container' },
+            didOpen: () => {
+                sopaContainer = document.getElementById('sopa-interactiva');
+                let primerClic = null; // guarda la primera celda clickeada
+
+                const celdas = getCeldas(sopaContainer);
+
+                celdas.forEach(span => {
+                    // --- MOUSE ---
+                    span.addEventListener('mousedown', e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        manejarClic(span, sopaContainer);
+                    });
+
+                    // --- TOUCH ---
+                    span.addEventListener('touchend', e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        manejarClic(span, sopaContainer);
+                    }, { passive: false });
+                });
+
+                function manejarClic(span, container) {
+                    const f = parseInt(span.dataset.f);
+                    const c = parseInt(span.dataset.c);
+
+                    // Si ya fue encontrada, ignorar
+                    const yaEncontrada = palabrasEncontradas.find(p =>
+                        posicionesPalabras[p].some(pos => pos[0] === f && pos[1] === c)
+                    );
+                    if (yaEncontrada) return;
+
+                    if (primerClic === null) {
+                        // Primer clic — marcar inicio
+                        primerClic = [f, c];
+                        celdasSeleccionadas = [[f, c]];
+                        document.getElementById('sopa-hint').textContent = '✦ Ahora haz clic en la última letra...';
+                    } else {
+                        // Segundo clic — calcular todas las celdas entre inicio y fin
+                        const [f1, c1] = primerClic;
+                        const [f2, c2] = [f, c];
+
+                        const df = f2 - f1;
+                        const dc = c2 - c1;
+                        const pasos = Math.max(Math.abs(df), Math.abs(dc));
+
+                        // Solo horizontal, vertical o diagonal
+                        if (pasos > 0 && (df === 0 || dc === 0 || Math.abs(df) === Math.abs(dc))) {
+                            const sf = df === 0 ? 0 : df / Math.abs(df);
+                            const sc = dc === 0 ? 0 : dc / Math.abs(dc);
+                            celdasSeleccionadas = [];
+                            for (let i = 0; i <= pasos; i++) {
+                                celdasSeleccionadas.push([f1 + sf * i, c1 + sc * i]);
+                            }
+                        } else {
+                            // Dirección inválida — reiniciar
+                            celdasSeleccionadas = [];
+                            primerClic = null;
+                            document.getElementById('sopa-hint').textContent = '✗ Dirección inválida, intenta de nuevo.';
+                            resaltarSeleccion(container);
+                            return;
+                        }
+
+                        resaltarSeleccion(container);
+                        verificarPalabra(container);
+                        primerClic = null;
+                        document.getElementById('sopa-hint').textContent = '';
+                        return;
+                    }
+                    resaltarSeleccion(container);
+                }
+            }
+        });
+    }
+
+    function mostrarAlerta() {
+        Swal.fire({
+            html: `
+                <div style="text-align:center; padding:10px 0; font-family:'Old Standard TT',serif;">
+                    <div style="font-size:48px; margin-bottom:8px;">💌</div>
+                    <h2 style="font-family:'Playfair Display',serif; color:#8b0000; font-size:24px; margin:0 0 6px;">
+                        ¡URGENTE!
+                    </h2>
+                    <div style="width:50px;height:2px;background:#8b0000;margin:8px auto 14px;"></div>
+                    <p style="font-size:16px; color:#3a1a1a; line-height:1.7; margin:0 0 16px;">
+                        ¿Aceptas seguir escribiendo esta historia conmigo, <strong>sin importar la distancia?</strong>
+                    </p>
+                    <p style="font-size:13px; color:#9a6a6a; font-style:italic;">
+                        — De Ecuador a Chile, con todo mi amor 🌎💕
+                    </p>
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: '¡Sí, mil veces sí! 💖',
+            cancelButtonText: '¡Obvio que sí! 🥰',
+            confirmButtonColor: '#8b0000',
+            cancelButtonColor: '#c05070',
+            background: '#fdf6e3 url(https://www.transparenttextures.com/patterns/parchment.png)',
+            backdrop: `rgba(139,0,0,0.25)`,
+            width: '400px',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Respuesta para "¡Sí, mil veces sí!"
+                Swal.fire({
+                    html: `
+                        <div style="text-align:center; padding:10px 0; font-family:'Old Standard TT',serif;">
+                            <div style="font-size:52px; margin-bottom:10px; display:inline-block; animation:latidoA 0.8s infinite;">💍</div>
+                            <h2 style="font-family:'Playfair Display',serif; color:#8b0000; font-size:22px; margin:6px 0 8px;">
+                                ¡Eso es todo lo que necesitaba escuchar!
+                            </h2>
+                            <div style="width:50px;height:2px;background:#8b0000;margin:8px auto 14px;"></div>
+                            <p style="font-size:15px; color:#3a1a1a; line-height:1.8; font-style:italic; margin:0 0 12px;">
+                                "Tú y yo contra la distancia,<br>
+                                contra el tiempo, contra todo.<br>
+                                Pero nunca el uno contra el otro."
+                            </p>
+                            <p style="font-size:13px; color:#9a6a6a; margin-top:10px; text-align:right; font-style:italic;">
+                                — Siempre tuyo, desde Ecuador 🇪🇨❤️
+                            </p>
+                            <div style="font-size:22px; letter-spacing:8px; margin-top:12px;">💒✨💒</div>
+                        </div>
+                        <style>@keyframes latidoA{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}</style>
+                    `,
+                    confirmButtonText: '💖 Para siempre',
+                    confirmButtonColor: '#8b0000',
+                    background: '#fdf6e3 url(https://www.transparenttextures.com/patterns/parchment.png)',
+                    backdrop: `rgba(139,0,0,0.2)`,
+                    width: '400px',
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                // Respuesta para "¡Obvio que sí!"
+                Swal.fire({
+                    html: `
+                        <div style="text-align:center; padding:10px 0; font-family:'Old Standard TT',serif;">
+                            <div style="font-size:52px; margin-bottom:10px; display:inline-block; animation:latidoB 0.9s infinite;">🥰</div>
+                            <h2 style="font-family:'Playfair Display',serif; color:#c05070; font-size:22px; margin:6px 0 8px;">
+                                ¡Sabía que dirías eso!
+                            </h2>
+                            <div style="width:50px;height:2px;background:#c05070;margin:8px auto 14px;"></div>
+                            <p style="font-size:15px; color:#3a1a1a; line-height:1.8; font-style:italic; margin:0 0 12px;">
+                                "Porque lo nuestro no necesita<br>
+                                convencimiento ni dudas.<br>
+                                Solo necesita que sigamos eligiéndonos."
+                            </p>
+                            <p style="font-size:13px; color:#9a6a6a; margin-top:10px; text-align:right; font-style:italic;">
+                                — Te espero, mi niña 🇨🇱💜
+                            </p>
+                            <div style="font-size:22px; letter-spacing:8px; margin-top:12px;">🌸✨🌸</div>
+                        </div>
+                        <style>@keyframes latidoB{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}</style>
+                    `,
+                    confirmButtonText: '🌸 Siempre juntos',
+                    confirmButtonColor: '#c05070',
+                    background: '#fdf6e3 url(https://www.transparenttextures.com/patterns/parchment.png)',
+                    backdrop: `rgba(192,80,112,0.2)`,
+                    width: '400px',
+                });
+            }
+        });
+    }
+
+    function respuestaAmor(tipo) {
+        const configs = {
+            mucho: {
+                emoji: '💗',
+                titulo: '¡Yo te amo mucho más!',
+                msg: 'Desde El Triunfo hasta Curicó, mi amor por ti no cabe en ningún mapa.',
+                color: '#c0395a'
+            },
+            infinito: {
+                emoji: '🌌',
+                titulo: '¡Nuestro amor es infinito!',
+                msg: '3.247 km de distancia y aun así eres lo más cerca que tengo al corazón.',
+                color: '#6a0dad'
+            },
+            mas: {
+                emoji: '🌅',
+                titulo: '¡Y mañana aún más!',
+                msg: 'Cada día que pasa te amo más, y el día que nos veamos será el mejor de mi vida.',
+                color: '#8b4513'
+            }
+        };
+        const cfg = configs[tipo];
+        Swal.fire({
+            html: `
+                <div style="text-align:center; padding:10px 0; font-family:'Old Standard TT',serif;">
+                    <div style="font-size:52px; margin-bottom:8px; animation:latido3 0.8s infinite; display:inline-block;">${cfg.emoji}</div>
+                    <h2 style="font-family:'Playfair Display',serif; color:${cfg.color}; font-size:22px; margin:6px 0 8px;">
+                        ${cfg.titulo}
+                    </h2>
+                    <div style="width:50px;height:2px;background:${cfg.color};margin:8px auto 14px;"></div>
+                    <p style="font-size:15px; color:#3a1a1a; line-height:1.7; font-style:italic; margin:0 0 10px;">
+                        "${cfg.msg}"
+                    </p>
+                    <div style="font-size:20px; letter-spacing:6px; margin-top:10px;">💕 ✨ 💕</div>
+                </div>
+                <style>
+                    @keyframes latido3 { 0%,100%{transform:scale(1)} 50%{transform:scale(1.2)} }
+                </style>
+            `,
+            confirmButtonText: '❤️ Siempre juntos',
+            confirmButtonColor: cfg.color,
+            background: '#fdf6e3 url(https://www.transparenttextures.com/patterns/parchment.png)',
+            backdrop: `rgba(139,0,0,0.2)`,
+            width: '380px',
+        });
+    }
+
+    /* ===== MINI TEST ===== */
+    const preguntas = [
+        {
+            pregunta: "¿Desde qué pais te escribo cada día?",
+            opciones: ["Perú", "Ecuador", "Chile", "Argentina"],
+            correcta: 1, emoji: "🗺️"
+        },
+        {
+            pregunta: "¿Cuando es mi cumpleaños?",
+            opciones: ["9 de mayo", "9 de abril", "19 de abril", "19 de mayo"],
+            correcta: 2, emoji: "🌍"
+        },
+        {
+            pregunta: "¿En qué fecha comenzó nuestra historia?",
+            opciones: ["8 de abril", "8 de junio", "8 de mayo", "18 de mayo"],
+            correcta: 2, emoji: "📅"
+        },
+        {
+            pregunta: "¿Qué nunca podrá separarnos?",
+            opciones: ["La distancia", "El tiempo", "Las dudas", "Nada jamás"],
+            correcta: 3, emoji: "💕"
+        }
+    ];
+
+    let testActual = 0;
+    let testPuntos = 0;
+
+    function iniciarTest() {
+        testActual = 0;
+        testPuntos = 0;
+        mostrarPregunta();
+    }
+
+    function mostrarPregunta() {
+        if (testActual >= preguntas.length) {
+            mostrarResultadoFinal();
+            return;
+        }
+        const p = preguntas[testActual];
+        document.getElementById('pregunta-display').innerHTML = `${p.emoji} ${p.pregunta}`;
+        document.getElementById('resultado-display').style.display = 'none';
+        const opcionesHTML = p.opciones.map((op, i) =>
+            `<button class="test-opcion" onclick="responderTest(${i})">${String.fromCharCode(65+i)}. ${op}</button>`
+        ).join('');
+        document.getElementById('opciones-display').innerHTML = opcionesHTML;
+        document.getElementById('test-num').textContent = `Pregunta ${testActual + 1} de ${preguntas.length}`;
+    }
+
+    function responderTest(idx) {
+        const p = preguntas[testActual];
+        const botones = document.querySelectorAll('.test-opcion');
+        botones.forEach(b => b.disabled = true);
+        if (idx === p.correcta) {
+            botones[idx].classList.add('correcta');
+            testPuntos++;
+            document.getElementById('resultado-display').style.display = 'block';
+            document.getElementById('resultado-display').innerHTML = '¡Correcto! 🌟';
+        } else {
+            botones[idx].classList.add('incorrecta');
+            botones[p.correcta].classList.add('correcta');
+            document.getElementById('resultado-display').style.display = 'block';
+            document.getElementById('resultado-display').innerHTML = '¡Casi! La respuesta era otra 💕';
+        }
+        setTimeout(() => { testActual++; mostrarPregunta(); }, 1400);
+    }
+
+    function mostrarResultadoFinal() {
+        const mensajes = [
+            { min:0, max:1, txt:"¡Aún te falta conocerme más... pero tenemos toda la vida! 😄💕" },
+            { min:2, max:2, txt:"¡Vas bien! Me conoces bastante, pero aún hay secretos ✨" },
+            { min:3, max:3, txt:"¡Casi perfecto! Me conoces muy bien, mi amor 🥰" },
+            { min:4, max:4, txt:"¡Perfecto! Me conoces como nadie en este mundo 💖🌍" }
+        ];
+        const msg = mensajes.find(m => testPuntos >= m.min && testPuntos <= m.max);
+        document.getElementById('pregunta-display').innerHTML = '';
+        document.getElementById('opciones-display').innerHTML =
+            `<button class="test-opcion" onclick="iniciarTest()" style="text-align:center;">↺ Jugar de nuevo</button>`;
+        document.getElementById('resultado-display').style.display = 'block';
+        document.getElementById('resultado-display').innerHTML =
+            `${testPuntos}/${preguntas.length} correctas<br>${msg.txt}`;
+        document.getElementById('test-num').textContent = '¡Test completado!';
+        document.getElementById('test-puntos').style.display = 'inline';
+        document.getElementById('test-puntos').textContent = `★ ${testPuntos}/${preguntas.length}`;
+    }
+
+    // Iniciar test al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+        iniciarTest();
+    });
+</script>
+</body>
+
+</html>
